@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.js"></script>
+    <style>
+        body {
+          margin: 0;
+          font-family: 'Montserrat', sans-serif;
+          background: linear-gradient(45deg, #34e89e, #0f3443);
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+    
+        .container {
+          background: rgba(255, 255, 255, 0.8);
+          border-radius: 10px;
+          padding: 30px;
+          width: 300px;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+          text-align: center;
+        }
+    
+        h1 {
+          color: #0f3443;
+          margin-bottom: 20px;
+        }
+    
+        h3 {
+          color: #333;
+          margin-top: 0;
+          margin-bottom: 40px;
+        }
+    
+        form {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+    
+        input {
+          padding: 10px;
+          border: none;
+          border-radius: 5px;
+          width: 100%;
+          box-sizing: border-box;
+        }
+    
+        input[type="text"],
+        input[type="file"],
+        input[type="date"] {
+          background: rgba(255, 255, 255, 0.1);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          color: #333;
+        }
+    
+        input[type="radio"] {
+          margin-right: 5px;
+          cursor: pointer;
+        }
+    
+        label {
+          color: #333;
+        }
+    
+        button {
+          padding: 12px;
+          background-color: #34e89e;
+          color: #fff;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+        .gender-checkbox {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    input[type="radio"] {
+      margin-right: 5px;
+      cursor: pointer;
+    }
+        button:hover {
+          background-color: #0f3443;
+        }
+      </style>
+</head>
+<body>
+    <div class="container">
+ 
+  
+      <form id="myForm">
+         
+        <input type="text" placeholder="Full Name" required name="name" id="name">
+    
+        <input type="text" placeholder="Address" required name="address" id="address">
+    
+        <input type="text" placeholder="preparing for.." required name="stream" id="stream">
+    
+        <input type="text" placeholder="Mobile Number" required name="mobile_number" id="mobile_number">
+        <div class="gender-checkbox">
+          
+          <input type="radio" id="male" name="gender" required value="Male">
+      <label for="Male">Male</label><br>
+      <input type="radio" id="female" name="gender" value="Female">
+      <label for="Female">Female</label><br> 
+        </div>
+    
+    
+        <label for="dob">Date of Birth:</label>
+        <input type="date" required name="dob" id="dob">
+    
+        <label for="adharcard">Adhar Card:</label>
+        <input type="file" required id="adharcard">
+    
+        <label for="photo">Photo:</label>
+        <input type="file" required id="photo">
+    
+        <input id="btn"  type='submit' />
+      </form>
+         </div>
+    <script>
+        async function handleImageUpload(event) {
+
+const imageFile = event;
+
+
+const options = {
+  maxSizeMB: 1,
+  maxWidthOrHeight: 1920,
+  useWebWorker: true,
+
+  mediaType: 'photo',
+  quality: 0.20,
+};
+try {
+  const compressedFile = await imageCompression(imageFile, options);
+  // console.log('ddddd',event , compressedFile)
+  // console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+  // console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB` ,event ,compressedFile); // smaller than maxSizeMB
+   return  compressedFile
+  // write your own logic
+} catch (error) {
+  console.log(error);
+}
+
+
+}
+const chatNameElement = document.querySelector("#name");
+const chatAddressElement = document.querySelector("#address");
+const chatDobElement = document.querySelector("#dob");
+const chatPhotoElement = document.querySelector("#photo");
+const chatAdharcardElement = document.querySelector("#adharcard");
+const chatMaleElement = document.querySelector("#male");
+const chatFemaleElement = document.querySelector("#female");
+const chatStreamElement = document.querySelector("#stream");
+const chatMobile_numberElement = document.querySelector("#mobile_number");
+const btnSend = document.querySelector("#btn_send");
+
+let gender;
+
+chatMaleElement.onchange = function () {
+
+if (chatMaleElement.checked == true) {
+  gender = "Male";
+}
+};
+chatFemaleElement.onchange = function () {
+
+if (chatFemaleElement.checked == true) {
+  gender = "Female";
+}
+};
+
+
+const urlParams = new URLSearchParams(window.location.search)
+const libid = urlParams.get("libid")
+const id = urlParams.get("id");
+const user=urlParams.get('user_id')
+const sign=urlParams.get('sign')
+console.log(libid , id)
+
+
+
+
+
+form.addEventListener('submit',async function(event) {
+  event.preventDefault();
+  const adharcard = await handleImageUpload(chatAdharcardElement.files[0]||null)
+  const photo= await handleImageUpload(chatPhotoElement.files[0]||null)
+  
+    const data = new FormData();
+    data.append('name' ,chatNameElement.value)
+    data.append('adress' ,chatAddressElement.value)
+    if(dob)data.append('dob' ,chatDobElement.value)
+    data.append('stream' ,chatStreamElement.value)
+    data.append('mobile_number' ,chatMobile_numberElement.value)
+   
+    if(gender)data.append('gender' ,gender)
+    
+    if(adharcard)data.append("adharcard", adharcard ,adharcard.name);
+    if(photo)data.append("photo",photo ,photo.name);
+
+    fetch(`add-half-time/${libid}/${id}/${user}/${sign}/`, {
+  method: "POST",
+    body:data
+})
+  .then(res=> {
+    if(res.status==200){
+    alert("data Saved")
+   }
+   else{
+    alert("something went wrong")
+   }
+  })
+  .catch((err) => alert(err));
+})
+
+    </script>
+</body>
+</html>
