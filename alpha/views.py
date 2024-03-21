@@ -98,7 +98,7 @@ class LibView(APIView):
     def get(self, request):
         user = request.user
         print(user.id)
-        lib = Library.objects.filter(owner_id=1)
+        lib = Library.objects.filter(owner_id=user.id)
         lib_serlizer = LibrarySerializer(lib, many=True)
         return Response(lib_serlizer.data)
 # view your library
