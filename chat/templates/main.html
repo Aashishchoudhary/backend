@@ -126,6 +126,8 @@
       </form>
          </div>
     <script>
+              const form = document.getElementById('myForm');
+
         async function handleImageUpload(event) {
 
 const imageFile = event;
@@ -207,7 +209,7 @@ form.addEventListener('submit',async function(event) {
     if(adharcard)data.append("adharcard", adharcard ,adharcard.name);
     if(photo)data.append("photo",photo ,photo.name);
 
-    fetch(`add-half-time/${libid}/${id}/${user}/${sign}/`, {
+    fetch(`add-reservation-data/${libid}/${id}/${user}/${sign}/`, {
   method: "POST",
     body:data
 })
